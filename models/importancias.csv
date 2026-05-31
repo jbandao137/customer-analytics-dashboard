@@ -1,0 +1,29 @@
+variable,importancia
+tipo_contrato_Mensual,0.14620890057578403
+meses_antiguedad,0.11888713587544031
+cargo_total,0.1150246957877267
+cargo_mensual,0.11428824451081955
+edad,0.08560361064056249
+tipo_contrato_Bianual,0.06261904363144341
+tipo_contrato_Anual,0.047377284044997484
+tickets_soporte,0.03641248841947271
+metodo_pago_Cheque electronico,0.027814562038494053
+servicio_internet_Fibra optica,0.027478905714199416
+soporte_tecnico_No,0.01701874130041441
+soporte_tecnico_Si,0.015941252881289586
+servicio_internet_DSL,0.014670850295287741
+factura_electronica_Si,0.014439436358628046
+genero_Masculino,0.013793869377450226
+tiene_pareja_No,0.013091688140881654
+genero_Femenino,0.012992531592451844
+tiene_pareja_Si,0.012570710949120868
+factura_electronica_No,0.012569598870469694
+metodo_pago_Tarjeta credito,0.012386105259916265
+tiene_dependientes_No,0.01208570931613051
+servicio_internet_No,0.011777827349434394
+es_senior,0.011520258237431382
+tiene_dependientes_Si,0.010800025199757906
+metodo_pago_Cheque por correo,0.010649995088487517
+metodo_pago_Transferencia bancaria,0.00932441444366294
+servicio_telefono_No,0.006793234317560153
+servicio_telefono_Si,0.0058588797826846836

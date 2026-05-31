@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/train_model.py'\\).read\\(\\)\\); print\\('train_model.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('src/dashboard.py'\\).read\\(\\)\\); print\\('dashboard.py OK'\\)\")",
+      "Bash(python3 *)",
+      "Bash(venv/bin/python *)"
+    ]
+  }
+}

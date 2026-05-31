@@ -1,0 +1,4 @@
+modelo,auc_roc,avg_precision,precision_churn,recall_churn,f1_churn,f2_churn
+Regresión Logística,0.744,0.41,0.386,0.69,0.495,0.596
+Gradient Boosting,0.732,0.403,0.383,0.685,0.491,0.592
+Random Forest,0.744,0.434,0.39,0.565,0.461,0.518
