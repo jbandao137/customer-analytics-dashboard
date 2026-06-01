@@ -31,3 +31,14 @@ def resultado_comparacion(datos_split):
     """Resultado de comparar_modelos(), calculado una vez para todos los tests."""
     X_train, X_test, y_train, y_test = datos_split
     return comparar_modelos(X_train, X_test, y_train, y_test)
+
+
+@pytest.fixture(scope="session")
+def pipeline_entrenado(datos_split):
+    """Pipeline de Regresión Logística listo para tests de inferencia por lotes."""
+    from sklearn.linear_model import LogisticRegression
+    from src.train_model import construir_pipeline
+    X_train, _, y_train, _ = datos_split
+    pipe = construir_pipeline(LogisticRegression(max_iter=300))
+    pipe.fit(X_train, y_train)
+    return pipe

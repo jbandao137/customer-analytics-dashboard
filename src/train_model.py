@@ -40,6 +40,7 @@ NUM_FEATURES = [
     "cargo_total", "tickets_soporte",
 ]
 TARGET = "churn"
+REQUIRED_FEATURES = CAT_FEATURES + NUM_FEATURES
 
 # GradientBoosting no acepta class_weight; se balancea con sample_weight en fit().
 MODELOS_SIN_CLASS_WEIGHT = {"Gradient Boosting"}
@@ -202,6 +203,21 @@ def obtener_importancias(modelo):
         .sort_values("importancia", ascending=False)
         .reset_index(drop=True)
     )
+
+
+def validar_columnas(df: pd.DataFrame) -> tuple[bool, list[str]]:
+    """Devuelve (True, []) si df tiene todas las features; (False, [faltantes]) si no."""
+    faltantes = [c for c in REQUIRED_FEATURES if c not in df.columns]
+    return len(faltantes) == 0, faltantes
+
+
+def predecir_por_lotes(modelo, df: pd.DataFrame) -> pd.DataFrame:
+    """Aplica el modelo a todos los clientes y retorna el df con prob_churn, ordenado desc."""
+    X = df[REQUIRED_FEATURES]
+    probas = modelo.predict_proba(X)[:, 1]
+    resultado = df.copy()
+    resultado["prob_churn"] = probas
+    return resultado.sort_values("prob_churn", ascending=False).reset_index(drop=True)
 
 
 if __name__ == "__main__":

@@ -16,9 +16,12 @@ from src.train_model import (
     CAT_FEATURES,
     MODELOS_CANDIDATOS,
     NUM_FEATURES,
+    REQUIRED_FEATURES,
     comparar_modelos,
     construir_pipeline,
     obtener_importancias,
+    predecir_por_lotes,
+    validar_columnas,
 )
 
 
@@ -147,3 +150,99 @@ def test_modelo_persiste_y_predice_igual(datos_split, tmp_path):
     probas_original = pipe.predict_proba(X_test)[:, 1]
     probas_cargado = cargado.predict_proba(X_test)[:, 1]
     assert np.allclose(probas_original, probas_cargado)
+
+
+# ---------------------------------------------------------------------------
+# validar_columnas
+# ---------------------------------------------------------------------------
+
+def test_validar_columnas_df_completo_pasa(dataset):
+    valido, faltantes = validar_columnas(dataset[REQUIRED_FEATURES])
+    assert valido is True
+    assert faltantes == []
+
+
+def test_validar_columnas_detecta_columnas_faltantes(dataset):
+    incompleto = dataset[REQUIRED_FEATURES].drop(columns=["meses_antiguedad", "cargo_mensual"])
+    valido, faltantes = validar_columnas(incompleto)
+    assert valido is False
+    assert set(faltantes) == {"meses_antiguedad", "cargo_mensual"}
+
+
+def test_validar_columnas_df_vacio_con_columnas_correctas():
+    """Un df vacío pero con las columnas correctas pasa la validación de esquema."""
+    import pandas as pd
+    df_vacio = pd.DataFrame(columns=REQUIRED_FEATURES)
+    valido, faltantes = validar_columnas(df_vacio)
+    assert valido is True
+    assert faltantes == []
+
+
+def test_validar_columnas_ignora_columnas_extra(dataset):
+    """Columnas adicionales en el CSV del usuario no deben provocar error."""
+    con_extra = dataset[REQUIRED_FEATURES].copy()
+    con_extra["id_cliente"] = range(len(con_extra))
+    con_extra["nombre"] = "test"
+    valido, faltantes = validar_columnas(con_extra)
+    assert valido is True
+
+
+def test_validar_columnas_sin_columnas():
+    """Un DataFrame completamente vacío de columnas reporta todas como faltantes."""
+    import pandas as pd
+    df_sin_cols = pd.DataFrame()
+    valido, faltantes = validar_columnas(df_sin_cols)
+    assert valido is False
+    assert set(faltantes) == set(REQUIRED_FEATURES)
+
+
+# ---------------------------------------------------------------------------
+# predecir_por_lotes
+# ---------------------------------------------------------------------------
+
+def test_predecir_por_lotes_agrega_columna_prob_churn(pipeline_entrenado, dataset):
+    resultado = predecir_por_lotes(pipeline_entrenado, dataset[REQUIRED_FEATURES])
+    assert "prob_churn" in resultado.columns
+
+
+def test_predecir_por_lotes_probabilidades_entre_0_y_1(pipeline_entrenado, dataset):
+    resultado = predecir_por_lotes(pipeline_entrenado, dataset[REQUIRED_FEATURES])
+    assert resultado["prob_churn"].between(0.0, 1.0).all()
+
+
+def test_predecir_por_lotes_ordenado_descendente(pipeline_entrenado, dataset):
+    resultado = predecir_por_lotes(pipeline_entrenado, dataset[REQUIRED_FEATURES])
+    probs = resultado["prob_churn"].tolist()
+    assert probs == sorted(probs, reverse=True)
+
+
+def test_predecir_por_lotes_preserva_columnas_originales(pipeline_entrenado, dataset):
+    df_extra = dataset[REQUIRED_FEATURES].copy()
+    df_extra["id_cliente"] = range(len(df_extra))
+    resultado = predecir_por_lotes(pipeline_entrenado, df_extra)
+    assert "id_cliente" in resultado.columns
+    assert set(REQUIRED_FEATURES).issubset(resultado.columns)
+
+
+def test_predecir_por_lotes_longitud_igual_al_input(pipeline_entrenado, dataset):
+    df_in = dataset[REQUIRED_FEATURES].head(50)
+    resultado = predecir_por_lotes(pipeline_entrenado, df_in)
+    assert len(resultado) == 50
+
+
+def test_predecir_por_lotes_una_sola_fila(pipeline_entrenado, dataset):
+    df_una = dataset[REQUIRED_FEATURES].head(1)
+    resultado = predecir_por_lotes(pipeline_entrenado, df_una)
+    assert len(resultado) == 1
+    assert 0.0 <= resultado["prob_churn"].iloc[0] <= 1.0
+
+
+def test_predecir_por_lotes_categorias_desconocidas(pipeline_entrenado, dataset):
+    """handle_unknown='ignore' del pipeline debe absorber categorías nuevas sin crash."""
+    import pandas as pd
+    df_raro = dataset[REQUIRED_FEATURES].head(5).copy()
+    df_raro["tipo_contrato"] = "Trimestral"
+    df_raro["servicio_internet"] = "Satelital"
+    resultado = predecir_por_lotes(pipeline_entrenado, df_raro)
+    assert len(resultado) == 5
+    assert resultado["prob_churn"].between(0.0, 1.0).all()

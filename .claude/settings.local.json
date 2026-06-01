@@ -9,7 +9,11 @@
       "Bash(pip3 freeze *)",
       "Bash(/home/jose/proyectos/customer-analytics-dashboard/venv/bin/pip freeze *)",
       "Bash(venv/bin/pytest *)",
-      "Bash(PYTHONPATH=/home/jose/proyectos/customer-analytics-dashboard/venv/lib/python3.10/site-packages python3 *)"
+      "Bash(PYTHONPATH=/home/jose/proyectos/customer-analytics-dashboard/venv/lib/python3.10/site-packages python3 *)",
+      "WebSearch",
+      "WebFetch(domain:discuss.streamlit.io)",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'src'\\); exec\\(open\\('src/dashboard.py'\\).read\\(\\)\\)\")",
+      "Bash(python *)"
     ]
   }
 }
