@@ -1,5 +1,7 @@
 # 📊 Customer Analytics & Churn Prediction Dashboard
 
+🔗 **[Ver demo en vivo](https://customer-analytics-dashboard-7pcahlwsxr9zdxvpy8lmnw.streamlit.app/)**
+
 > Plataforma de analítica de clientes que monitorea indicadores clave, detecta fricciones que afectan la experiencia del cliente y predice el abandono (churn) usando Machine Learning.
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
@@ -11,7 +13,7 @@
 
 ## 🖥️ Demo
 
-> *Agrega aquí un screenshot o GIF del dashboard (`docs/demo.gif`) antes de subir a GitHub.*
+![Dashboard](docs/screenshot.png)
 
 ---
 
@@ -21,7 +23,9 @@ Las empresas de servicios pierden ingresos cuando sus clientes abandonan (*churn
 
 - **Monitorear** los indicadores principales del negocio (tasa de churn, ingresos, antigüedad).
 - **Detectar fricciones**: qué factores hacen que un cliente se vaya.
+- **Comparar 3 modelos** de ML (Random Forest, Regresión Logística, Gradient Boosting) con métricas lado a lado y selección automática del mejor.
 - **Predecir** en tiempo real la probabilidad de que un cliente específico abandone, para activar acciones de retención.
+- **Predecir en lotes**: carga un CSV de clientes y obtén la probabilidad de churn de todos en un solo paso.
 
 Esto cubre el ciclo completo de **analítica de datos → modelado predictivo → tablero de decisión**.
 
@@ -52,7 +56,7 @@ customer-analytics-dashboard/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/[TU_USUARIO]/customer-analytics-dashboard.git
+git clone https://github.com/jbandao137/customer-analytics-dashboard.git
 cd customer-analytics-dashboard
 
 # 2. Crear entorno virtual e instalar dependencias
@@ -79,14 +83,14 @@ El dashboard abrirá en `http://localhost:8501`.
 ### 1. Datos
 Dataset de 5,000 clientes con variables demográficas, de servicio y de comportamiento (antigüedad, cargos, tickets de soporte, tipo de contrato, etc.).
 
-### 2. Modelo
-Se entrena un **Random Forest** dentro de un `Pipeline` de scikit-learn que codifica variables categóricas con One-Hot Encoding. El modelo está balanceado por clase para manejar el desbalance natural del churn.
+### 2. Modelos
+Se entrenan **3 algoritmos** dentro de `Pipeline`s de scikit-learn (One-Hot Encoding + clasificador), todos balanceados por clase. El de mayor AUC-ROC se selecciona automáticamente:
 
-**Métricas en conjunto de prueba:**
-| Métrica | Valor |
-|---------|-------|
-| AUC-ROC | ~0.74 |
-| Recall (churn) | ~0.57 |
+| Modelo | AUC-ROC | Recall (churn) |
+|--------|---------|----------------|
+| Random Forest | ~0.74 | ~0.57 |
+| Regresión Logística | ~0.70 | ~0.55 |
+| Gradient Boosting | ~0.75 | ~0.58 |
 
 ### 3. Insights de negocio
 Los factores que más predicen el abandono son:
