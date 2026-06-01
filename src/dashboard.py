@@ -132,7 +132,7 @@ with col_a:
         color="churn", color_continuous_scale="Reds",
     )
     fig.update_layout(yaxis_tickformat=".0%", showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 with col_b:
     st.markdown("**Distribución de antigüedad por estado de churn**")
@@ -142,7 +142,7 @@ with col_b:
         labels={"meses_antiguedad": "Meses de antigüedad", "churn_label": "Churn"},
         color_discrete_map={"Si": "#EF553B", "No": "#636EFA"},
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 col_c, col_d = st.columns(2)
 
@@ -155,7 +155,7 @@ with col_c:
         color="churn", color_continuous_scale="Oranges",
     )
     fig.update_layout(xaxis_tickformat=".0%", showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 with col_d:
     st.markdown("**Fricciones: factores que más predicen el churn**")
@@ -166,7 +166,7 @@ with col_d:
             color="importancia", color_continuous_scale="Viridis",
         )
         fig.update_layout(showlegend=False)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
     else:
         st.info("Entrena el modelo primero: python src/train_model.py")
 
@@ -217,7 +217,7 @@ if comparacion is not None:
                 annotation_text=f"Baseline aleatorio ({baseline:.2f})",
             )
             fig.update_layout(yaxis_range=[0, 1.05], xaxis_range=[0, 1.05])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         else:
             df_melted = comparacion.melt(
                 id_vars="modelo",
@@ -239,7 +239,7 @@ if comparacion is not None:
                 xaxis_range=[0, 1], legend_title="",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
 else:
     st.info("Entrena los modelos primero: `python src/train_model.py`")
 
@@ -308,7 +308,7 @@ if modelo is not None:
             number={"suffix": "%"},
         ))
         fig.update_layout(height=300)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
         if proba > 0.5:
             st.error("⚠️ Cliente de ALTO riesgo. Se recomienda acción de retención.")

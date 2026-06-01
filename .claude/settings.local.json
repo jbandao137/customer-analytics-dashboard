@@ -4,7 +4,12 @@
       "Bash(python -c \"import ast; ast.parse\\(open\\('src/train_model.py'\\).read\\(\\)\\); print\\('train_model.py OK'\\)\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\('src/dashboard.py'\\).read\\(\\)\\); print\\('dashboard.py OK'\\)\")",
       "Bash(python3 *)",
-      "Bash(venv/bin/python *)"
+      "Bash(venv/bin/python *)",
+      "Bash(pip freeze *)",
+      "Bash(pip3 freeze *)",
+      "Bash(/home/jose/proyectos/customer-analytics-dashboard/venv/bin/pip freeze *)",
+      "Bash(venv/bin/pytest *)",
+      "Bash(PYTHONPATH=/home/jose/proyectos/customer-analytics-dashboard/venv/lib/python3.10/site-packages python3 *)"
     ]
   }
 }
